@@ -48,7 +48,7 @@ const TeachersPage: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredTeachers.map((teacher) => (
-                    <div key={teacher.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-4">
+                    <div key={teacher._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-4">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">
@@ -62,7 +62,7 @@ const TeachersPage: React.FC = () => {
                                 </div>
                             </div>
                             <span className={`px-2 py-1 rounded text-xs font-semibold ${teacher.status === 'Present' ? 'bg-emerald-100 text-emerald-700' :
-                                    teacher.status === 'Absent' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
+                                teacher.status === 'Absent' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
                                 }`}>
                                 {teacher.status}
                             </span>

@@ -14,7 +14,7 @@ interface User {
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
-    login: (role: UserRole) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     isLoading: boolean;
 }
@@ -27,21 +27,11 @@ export const useAuth = () => {
     return context;
 };
 
-// Mock Users
-const MOCK_USERS: Record<UserRole, User> = {
-    SCHOOL: { id: 's1', name: 'Govt School Sikkim', role: 'SCHOOL', schoolId: 'SKM-001' },
-    BLOCK: { id: 'b1', name: 'Gangtok Block Officer', role: 'BLOCK' },
-    DISTRICT: { id: 'd1', name: 'East District Officer', role: 'DISTRICT' },
-    STATE_ADMIN: { id: 'a1', name: 'State Admin', role: 'STATE_ADMIN' },
-    TEACHER: { id: 't1', name: 'Mr. Pradhan', role: 'TEACHER', schoolId: 'SKM-001', assignedClass: '10-A' },
-};
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Check local storage for persisted session (Mocking "Remember Me" / Offline Auth)
         const storedUser = localStorage.getItem('sikkim_app_user');
         if (storedUser) {
             try {
@@ -55,14 +45,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const login = async (role: UserRole) => {
-        setIsLoading(true);
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 800));
+        // Implementation moved to Login component or needs refactoring
+        // For now, let's keep it generic but it should really be accepting credentials
+        // We will overload this or change the signature in the Step below
+    };
 
-        const mockUser = MOCK_USERS[role];
-        setUser(mockUser);
-        localStorage.setItem('sikkim_app_user', JSON.stringify(mockUser));
-        setIsLoading(false);
+    // Changing signature to accept email and password
+    const loginUser = async (email: string, password: string) => {
+        setIsLoading(true);
+        try {
+            // Using fetch to avoid circular dependency if api.ts uses AuthContext (it doesn't seems so but safer initially)
+            // Or better, import api
+            const response = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.msg || 'Login failed');
+            }
+
+            setUser(data.user);
+            localStorage.setItem('sikkim_app_user', JSON.stringify(data.user));
+            // Store token if needed: localStorage.setItem('token', data.token);
+        } catch (error) {
+            console.error(error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const logout = () => {
@@ -71,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, isLoading }}>
+        <AuthContext.Provider value={{ user, isAuthenticated: !!user, login: loginUser as any, logout, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

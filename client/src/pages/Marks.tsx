@@ -17,7 +17,7 @@ const MarksPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const student = students.find(s => s.id === newMark.studentId);
+        const student = students.find(s => s._id === newMark.studentId);
         if (!student) return;
 
         // @ts-ignore
@@ -71,7 +71,7 @@ const MarksPage: React.FC = () => {
                             else if (percent >= 40) grade = 'D';
 
                             return (
-                                <tr key={mark.id} className="hover:bg-slate-50">
+                                <tr key={mark._id} className="hover:bg-slate-50">
                                     <td className="px-6 py-4 font-medium text-slate-800">{mark.studentName}</td>
                                     <td className="px-6 py-4">{mark.examType}</td>
                                     <td className="px-6 py-4">{mark.subject}</td>
@@ -79,7 +79,7 @@ const MarksPage: React.FC = () => {
                                     <td className="px-6 py-4 font-mono">{percent.toFixed(1)}%</td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 rounded text-xs font-bold ${grade.startsWith('A') ? 'bg-emerald-100 text-emerald-700' :
-                                                grade === 'F' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
+                                            grade === 'F' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
                                             }`}>
                                             {grade}
                                         </span>
@@ -116,7 +116,7 @@ const MarksPage: React.FC = () => {
                                 >
                                     <option value="">Select Student...</option>
                                     {students.map(s => (
-                                        <option key={s.id} value={s.id}>{s.name} (Roll: {s.rollNo})</option>
+                                        <option key={s._id} value={s._id}>{s.name} (Roll: {s.rollNo})</option>
                                     ))}
                                 </select>
                             </div>

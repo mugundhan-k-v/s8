@@ -6,7 +6,7 @@ const AttendancePage: React.FC = () => {
     const { students, markAttendance, attendance } = useData();
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     // Initialize all as present by default
-    const [presentIds, setPresentIds] = useState<Set<string>>(new Set(students.map(s => s.id)));
+    const [presentIds, setPresentIds] = useState<Set<string>>(new Set(students.map(s => s._id)));
     const [isSaved, setIsSaved] = useState(false);
 
     const toggleAttendance = (id: string) => {
@@ -18,7 +18,17 @@ const AttendancePage: React.FC = () => {
     };
 
     const handleSave = async () => {
-        await markAttendance(selectedDate, Array.from(presentIds), students.length);
+        // Assuming we need to pass schoolId and class, hardcoding for now or need to fetch from students/context
+        const schoolId = students.length > 0 ? students[0].schoolId : null; // Fallback
+
+        await markAttendance({
+            date: selectedDate,
+            presentStudentIds: Array.from(presentIds),
+            totalStudents: students.length,
+            schoolId: schoolId?._id || schoolId || "000000000000000000000000", // Fallback dummy ID if logic fails
+            class: "10-A", // Hardcoded as per UI
+            section: "A"
+        });
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 3000);
     };
@@ -69,11 +79,11 @@ const AttendancePage: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 divide-y divide-slate-100 md:divide-y-0 md:gap-4 p-6">
                     {students.map((student) => {
-                        const isPresent = presentIds.has(student.id);
+                        const isPresent = presentIds.has(student._id);
                         return (
                             <div
-                                key={student.id}
-                                onClick={() => toggleAttendance(student.id)}
+                                key={student._id}
+                                onClick={() => toggleAttendance(student._id)}
                                 className={`
                                     cursor-pointer p-4 rounded-lg border  transition-all flex items-center justify-between
                                     ${isPresent

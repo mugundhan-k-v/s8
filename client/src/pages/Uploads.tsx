@@ -8,14 +8,9 @@ const UploadsPage: React.FC = () => {
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Simulate upload process
-            addUpload({
-                fileName: file.name,
-                size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-                type: file.type,
-                date: new Date().toISOString().split('T')[0],
-                status: 'Queued' // Default to queued for offline simulation
-            });
+            const formData = new FormData();
+            formData.append('file', file);
+            addUpload(formData);
         }
     };
 
@@ -47,7 +42,7 @@ const UploadsPage: React.FC = () => {
                 </div>
                 <div className="divide-y divide-slate-100">
                     {uploads.map((upload) => (
-                        <div key={upload.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                        <div key={upload._id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                             <div className="flex items-center gap-4">
                                 <div className="p-2 bg-slate-100 rounded text-slate-500">
                                     <FileText size={24} />
@@ -58,7 +53,7 @@ const UploadsPage: React.FC = () => {
                                 </div>
                             </div>
                             <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${upload.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' :
-                                    upload.status === 'Queued' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                                upload.status === 'Queued' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
                                 }`}>
                                 {upload.status === 'Completed' ? <CheckCircle size={14} /> : <Clock size={14} />}
                                 {upload.status}

@@ -92,7 +92,7 @@ const StudentsPage: React.FC = () => {
                         <tbody className="divide-y divide-slate-100">
                             {filteredStudents.length > 0 ? (
                                 filteredStudents.map((student) => (
-                                    <tr key={student.id} className="hover:bg-slate-50 transition-colors">
+                                    <tr key={student._id} className="hover:bg-slate-50 transition-colors">
                                         <td className="px-6 py-4 font-medium text-slate-800">{student.name}</td>
                                         <td className="px-6 py-4">
                                             <span className="px-2 py-1 bg-slate-100 rounded text-xs font-semibold text-slate-600">
