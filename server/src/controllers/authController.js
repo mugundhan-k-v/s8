@@ -9,15 +9,20 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        console.log('Central Login Attempt:', email);
         // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
+            console.log('User not found in Central DB');
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
+
+        console.log('User found:', user.email);
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) {
+            console.log('Password mismatch');
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 

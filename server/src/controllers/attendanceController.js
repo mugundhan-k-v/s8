@@ -20,6 +20,18 @@ exports.recordAttendance = async (req, res) => {
     const { date, schoolId, class: className, section, totalStudents, presentStudentIds } = req.body;
 
     try {
+        // PERMISSION CHECK
+        const user = req.user;
+
+        if (user.role === 'TEACHER') {
+            // Check if user is Class Teacher of this class
+            if (!user.classTeacherOf ||
+                user.classTeacherOf.class !== className ||
+                user.classTeacherOf.section !== section) {
+                return res.status(403).json({ msg: 'Not authorized. You are not the Class Teacher for this class.' });
+            }
+        }
+
         const attendance = new Attendance({
             date,
             schoolId,

@@ -16,16 +16,17 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['SCHOOL', 'BLOCK', 'DISTRICT', 'STATE_ADMIN', 'TEACHER'],
+        enum: ['STATE_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN', 'TEACHER'],
         required: true,
+    },
+    districtId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'District',
     },
     schoolId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'School',
-    },
-    assignedClass: {
-        type: String,
-    },
+    }
 }, {
     timestamps: true,
 });

@@ -19,7 +19,7 @@ exports.getUsers = async (req, res) => {
 // @route   POST /api/users
 // @access  Public (for initial setup) / Private
 exports.createUser = async (req, res) => {
-    const { name, email, password, role, schoolId, assignedClass } = req.body;
+    const { name, email, password, role, schoolId, districtId, classTeacherOf, teaches } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -37,7 +37,9 @@ exports.createUser = async (req, res) => {
             passwordHash: hashedPassword,
             role,
             schoolId,
-            assignedClass,
+            districtId,
+            classTeacherOf,
+            teaches,
         });
 
         await user.save();

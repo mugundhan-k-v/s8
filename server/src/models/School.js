@@ -16,7 +16,8 @@ const schoolSchema = new mongoose.Schema({
     },
     districtId: {
         type: mongoose.Schema.Types.ObjectId,
-        // ref: 'District' // If District model exists
+        ref: 'District',
+        required: true,
     },
     address: {
         type: String,

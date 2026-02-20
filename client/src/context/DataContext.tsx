@@ -84,16 +84,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [pendingChanges, setPendingChanges] = useState(0);
 
     const fetchData = async () => {
-        if (!isOnline) {
-            // Fallback to localstorage or offline behavior?
-            // For now just return if offline as we rely on backend for "connection" verification
-            return;
-        }
+        // Always fetch from local server — it works offline too.
+        // isOnline refers to central server connectivity, not local server.
         setIsSyncing(true);
         try {
-            const [studentsRes, usersRes, marksRes, attendanceRes, uploadsRes] = await Promise.all([
+            const [studentsRes, usersRes, teachersRes, marksRes, attendanceRes, uploadsRes] = await Promise.all([
                 api.get('/students'),
-                api.get('/users'), // Need to filter for teachers
+                api.get('/users'), // Keep for other user roles if needed
+                api.get('/teachers'), // Fetch actual teachers
                 api.get('/marks'),
                 api.get('/attendance'),
                 api.get('/upload')
@@ -101,9 +99,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             setStudents(studentsRes.data);
 
-            // Filter users for teachers (Assuming role 'TEACHER')
-            const teacherList = usersRes.data.filter((u: any) => u.role === 'TEACHER');
-            setTeachers(teacherList);
+            // Set teachers directly from the teacher endpoint
+            setTeachers(teachersRes.data);
+
+            // Optional: You might still want to look at users for admins etc.
+            // const teacherList = usersRes.data.filter((u: any) => u.role === 'TEACHER');
 
             setMarks(marksRes.data);
             setAttendance(attendanceRes.data);

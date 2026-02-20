@@ -54,9 +54,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loginUser = async (email: string, password: string) => {
         setIsLoading(true);
         try {
-            // Using fetch to avoid circular dependency if api.ts uses AuthContext (it doesn't seems so but safer initially)
-            // Or better, import api
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            // Use the API utility which points to the correct backend (local or central)
+            const response = await fetch('http://localhost:5001/api/auth/login', { // Pointing to local server
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })

@@ -2,8 +2,9 @@ import React from 'react';
 import { useNetwork } from '../../context/NetworkContext';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
-import { Wifi, WifiOff, RefreshCw, Bell } from 'lucide-react';
+import { Wifi, WifiOff, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
+import NotificationPanel from './NotificationPanel';
 
 const Header: React.FC = () => {
     const { isOnline } = useNetwork();
@@ -26,17 +27,33 @@ const Header: React.FC = () => {
                 {/* Sync Status Button */}
                 <button
                     onClick={syncData}
-                    disabled={!isOnline || isSyncing || pendingChanges === 0}
+                    disabled={!isOnline || isSyncing}
                     className={clsx(
                         "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all",
-                        isSyncing ? "bg-blue-50 text-blue-600 border-blue-200" :
-                            pendingChanges > 0 ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100" :
-                                "bg-slate-50 text-slate-500 border-slate-200"
+                        isSyncing
+                            ? "bg-blue-50 text-blue-600 border-blue-200"
+                            : !isOnline
+                                ? "bg-rose-50 text-rose-600 border-rose-200 cursor-not-allowed"
+                                : pendingChanges > 0
+                                    ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                                    : "bg-slate-50 text-slate-500 border-slate-200"
                     )}
-                    title={lastSyncTime ? `Last synced: ${lastSyncTime.toLocaleTimeString()}` : "Not synced yet"}
+                    title={
+                        !isOnline
+                            ? "Central server is offline — data saved locally"
+                            : lastSyncTime
+                                ? `Last synced: ${lastSyncTime.toLocaleTimeString()}`
+                                : "Not synced yet"
+                    }
                 >
                     <RefreshCw size={14} className={clsx({ "animate-spin": isSyncing })} />
-                    {isSyncing ? 'Syncing...' : pendingChanges > 0 ? `${pendingChanges} Changes Pending` : 'Synced'}
+                    {isSyncing
+                        ? 'Syncing...'
+                        : !isOnline
+                            ? 'Unsynced'
+                            : pendingChanges > 0
+                                ? `${pendingChanges} Pending`
+                                : 'Synced'}
                 </button>
 
                 {/* Network Status Indicator */}
@@ -50,11 +67,8 @@ const Header: React.FC = () => {
                     {isOnline ? 'Online' : 'Offline'}
                 </div>
 
-                {/* Notifications (Mock) */}
-                <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-full relative">
-                    <Bell size={20} />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-                </button>
+                {/* Notifications */}
+                <NotificationPanel />
 
                 {/* Avatar */}
                 <div className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
