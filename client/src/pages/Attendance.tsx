@@ -3,7 +3,7 @@ import { useData } from '../context/DataContext';
 import { Calendar as CalendarIcon, Save, Users, CheckCircle } from 'lucide-react';
 
 const AttendancePage: React.FC = () => {
-    const { students, markAttendance, attendance } = useData();
+    const { students, markAttendance } = useData();
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     // Initialize all as present by default
     const [presentIds, setPresentIds] = useState<Set<string>>(new Set(students.map(s => s._id)));

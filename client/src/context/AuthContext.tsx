@@ -44,11 +44,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(false);
     }, []);
 
-    const login = async (role: UserRole) => {
-        // Implementation moved to Login component or needs refactoring
-        // For now, let's keep it generic but it should really be accepting credentials
-        // We will overload this or change the signature in the Step below
-    };
 
     // Changing signature to accept email and password
     const loginUser = async (email: string, password: string) => {

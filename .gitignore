@@ -134,3 +134,19 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# ── Build outputs (never commit these) ──────────────────────────────
+# Electron build output
+client/dist-electron/
+client/dist/
+
+# Pre-compiled server binaries (large files — regenerate with npm run pkg:server)
+client/resources/local-server-win.exe
+client/resources/local-server-linux
+
+# SQLite database files
+*.sqlite
+*.db
+
+# External build folder
+C:/SikkimEduBuild/

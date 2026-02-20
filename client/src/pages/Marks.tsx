@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
-import { FileBarChart, Plus, Download } from 'lucide-react';
+import { Plus, Download } from 'lucide-react';
 
 const MarksPage: React.FC = () => {
     const { marks, students, addMark } = useData();

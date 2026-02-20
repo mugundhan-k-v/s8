@@ -16,13 +16,20 @@ export interface Student {
 export interface Teacher {
     _id: string;
     name: string;
-    email: string; // Changed from subject/phone for now based on User model
-    role: string;
+    email?: string;
+    role?: string;
+    subject?: string;       // legacy/display field
+    phone?: string;         // legacy/display field
+    status?: string;        // legacy/display field
+    subjects?: any[];       // actual field from local DB
+    schoolId?: any;
+    userId?: string;
 }
 
 export interface MarkRecord {
     _id: string;
     studentId: any;
+    studentName?: string;   // denormalized student name
     examType: string;
     subject: string;
     marksObtained: number;
@@ -32,10 +39,14 @@ export interface MarkRecord {
 export interface UploadRecord {
     _id: string;
     fileName: string;
-    createdAt: string; // Date string
-    fileSizeBytes: number;
-    uploadStatus: string;
-    fileType: string;
+    createdAt?: string;
+    fileSizeBytes?: number;
+    uploadStatus?: string;
+    fileType?: string;
+    // legacy display fields
+    size?: string;
+    date?: string;
+    status?: string;
 }
 
 export interface AttendanceRecord {
@@ -81,17 +92,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
     const [isSyncing, setIsSyncing] = useState(false);
-    const [pendingChanges, setPendingChanges] = useState(0);
+    const [pendingChanges, _setPendingChanges] = useState(0);
 
     const fetchData = async () => {
         // Always fetch from local server — it works offline too.
         // isOnline refers to central server connectivity, not local server.
         setIsSyncing(true);
         try {
-            const [studentsRes, usersRes, teachersRes, marksRes, attendanceRes, uploadsRes] = await Promise.all([
+            const [studentsRes, , teachersRes, marksRes, attendanceRes, uploadsRes] = await Promise.all([
                 api.get('/students'),
-                api.get('/users'), // Keep for other user roles if needed
-                api.get('/teachers'), // Fetch actual teachers
+                api.get('/users'), // kept for roles, result ignored
+                api.get('/teachers'),
                 api.get('/marks'),
                 api.get('/attendance'),
                 api.get('/upload')

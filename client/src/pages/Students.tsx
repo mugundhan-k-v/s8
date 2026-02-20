@@ -200,7 +200,7 @@ const StudentsPage: React.FC = () => {
                                     >
                                         <option value="">Select a teacher...</option>
                                         {teachers.map(t => (
-                                            <option key={t.id} value={t.id}>{t.name} ({t.subject})</option>
+                                            <option key={t._id} value={t._id}>{t.name} ({t.subjects?.[0]?.subject ?? t.subject ?? 'Teacher'})</option>
                                         ))}
                                     </select>
                                 </div>

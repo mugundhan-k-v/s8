@@ -10,7 +10,7 @@ const TeachersPage: React.FC = () => {
 
     const filteredTeachers = teachers.filter(t =>
         t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.subject.toLowerCase().includes(searchTerm.toLowerCase())
+        (t.subject ?? '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleSubmit = async (e: React.FormEvent) => {

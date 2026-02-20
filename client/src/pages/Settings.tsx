@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
-import { User, Database, Globe, Bell, Server } from 'lucide-react';
+import { Database, Globe, Bell, Server } from 'lucide-react';
 
 const SettingsPage: React.FC = () => {
     const { user, logout } = useAuth();

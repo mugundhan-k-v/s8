@@ -1,11 +1,25 @@
 {
   "name": "local-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pkg:win": "pkg src/index.js --target node18-win-x64 --output ../client/resources/local-server-win.exe --compress GZip",
+    "pkg:linux": "pkg src/index.js --target node18-linux-x64 --output ../client/resources/local-server-linux --compress GZip",
+    "pkg:all": "npm run pkg:win && npm run pkg:linux"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/sequelize/**",
+      "node_modules/sqlite3/build/Release/*.node",
+      "node_modules/bcryptjs/**",
+      "src/**"
+    ],
+    "targets": [
+      "node18-win-x64",
+      "node18-linux-x64"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -18,8 +32,11 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "nodemon": "^3.1.11",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
